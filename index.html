@@ -1,237 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Coco Chow Chow Virtual Shop</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechProSeller - Smartphone Marketplace</title>
 <style>
-  body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #fff7c7, #ffd9e8);
-    color: #333;
-  }
+/* -------- GLOBAL -------- */
+body{margin:0;font-family:Arial,sans-serif;background:#f4f9ff;color:#222}
+header{background:#1e88e5;padding:20px;color:white;display:flex;justify-content:space-between;align-items:center}
+header h1{margin:0}
+nav a{color:white;margin-left:20px;font-weight:bold;cursor:pointer;text-decoration:none}
+nav a:hover{text-decoration:underline}
+.hero{padding:60px 20px;text-align:center;background:linear-gradient(135deg,#1e88e5,#2ecc71);color:white}
+.product-section{max-width:1200px;margin:auto;padding:40px 20px}
+.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.product{background:#fff;padding:20px;border-radius:10px;text-align:center;box-shadow:0 4px 8px rgba(0,0,0,0.1);cursor:pointer;transition:0.2s}
+.product:hover{transform:translateY(-4px)}
+.product img{width:100%;height:250px;object-fit:contain}
+.price{font-size:20px;color:#2ecc71;margin-top:10px;font-weight:bold}
 
-  header {
-    background-color: #ffe8f2;
-    text-align: center;
-    padding: 40px 20px;
-    border-bottom: 4px solid #ffb6c1;
-  }
+/* ------- MODAL -------- */
+.modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:none;justify-content:center;align-items:center;padding:25px}
+.modal{background:white;width:100%;max-width:520px;border-radius:10px;padding:20px;max-height:85vh;overflow-y:auto}
+.close-btn{float:right;font-size:22px;cursor:pointer}
+select{width:100%;padding:10px;margin-top:6px;border-radius:6px;border:1px solid #ccc}
+.option-row{margin:14px 0}
+.add-cart{background:#2ecc71;color:white;border:none;padding:14px;width:100%;border-radius:6px;cursor:pointer;font-size:17px;font-weight:bold}
+.add-cart:hover{background:#25b866}
 
-  header h1 {
-    font-size: 3em;
-    color: #ff69b4;
-    text-shadow: 0 0 10px #ff80c0, 0 0 20px #ff80c0, 0 0 30px #ff80c0;
-  }
-
-  .hero {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
-  }
-
-  .hero img {
-    width: 250px;
-    border-radius: 20px;
-    box-shadow: 0 0 20px #ff80c0;
-    margin: 20px;
-  }
-
-  .products {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-    padding: 40px 20px;
-  }
-
-  .product {
-    background: #fffaf0;
-    border-radius: 20px;
-    padding: 20px;
-    width: 260px;
-    text-align: center;
-    box-shadow: 0 0 15px #ffb6c1;
-    transition: transform 0.2s ease;
-  }
-
-  .product:hover {
-    transform: scale(1.05);
-  }
-
-  .product img {
-    width: 100%;
-    border-radius: 15px;
-  }
-
-  .product h3 {
-    color: #ff69b4;
-    margin: 10px 0;
-  }
-
-  .product button {
-    background-color: #ffb6c1;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 30px;
-    color: white;
-    cursor: pointer;
-    font-size: 1em;
-    box-shadow: 0 0 10px #ff69b4;
-  }
-
-  .product button:hover {
-    background-color: #ff69b4;
-  }
-
-  #cart {
-    background-color: #fff7f7;
-    border-top: 3px solid #ffb6c1;
-    padding: 40px 20px;
-    text-align: center;
-  }
-
-  #cart h2 {
-    color: #ff69b4;
-    text-shadow: 0 0 10px #ff80c0;
-  }
-
-  #cart-items {
-    margin: 20px auto;
-    max-width: 500px;
-    text-align: left;
-  }
-
-  #cart-items li {
-    background: #fff;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 10px;
-    box-shadow: 0 0 5px #ffd9e8;
-  }
-
-  #checkout {
-    background: #ffeff7;
-    border-top: 3px solid #ffb6c1;
-    padding: 40px 20px;
-    text-align: center;
-  }
-
-  #checkout button {
-    background-color: #ff69b4;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 30px;
-    color: white;
-    cursor: pointer;
-    font-size: 1.2em;
-    box-shadow: 0 0 20px #ff80c0;
-  }
-
-  #checkout button:hover {
-    background-color: #ff1493;
-  }
-
-  footer {
-    background: #ffe8f2;
-    padding: 20px;
-    text-align: center;
-    color: #ff69b4;
-    font-size: 0.9em;
-    border-top: 4px solid #ffb6c1;
-  }
+/* ------ CART PANEL ------- */
+.cart-panel{position:fixed;right:0;top:0;width:330px;height:100%;background:white;box-shadow:-3px 0 10px rgba(0,0,0,0.2);padding:20px;transform:translateX(100%);transition:0.3s;overflow-y:auto}
+.cart-panel.open{transform:translateX(0)}
+.cart-item{padding:10px 0;border-bottom:1px solid #ddd}
+.checkout-btn{margin-top:20px;width:100%;padding:14px;background:#1e88e5;border:none;color:white;font-size:17px;font-weight:bold;border-radius:6px;cursor:pointer}
+.checkout-btn:hover{background:#156bbd}
+footer{margin-top:30px;padding:20px;background:#1e88e5;color:white;text-align:center}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🐶 Coco Chow Chow Virtual Shop 🐶</h1>
-  <p>Pastel dreams & pink neon cuddles — adopt your Coco Chow today!</p>
+  <h1>TechProSeller</h1>
+  <nav>
+    <a onclick="scrollToSection('hero')">Home</a>
+    <a onclick="scrollToSection('products')">Products</a>
+    <a onclick="scrollToSection('about')">About</a>
+    <a onclick="scrollToSection('contact')">Contact</a>
+    <a onclick="toggleCart()">Cart (<span id='cart-count'>0</span>)</a>
+  </nav>
 </header>
 
-<section class="hero">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Chow_Chow_-_Yellow.jpg" alt="Chow Chow 1" />
-  <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/Chow_Chow_dog.jpg" alt="Chow Chow 2" />
-  <img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Chow_Chow_puppy.jpg" alt="Chow Chow 3" />
+<section id="hero" class="hero">
+  <h2>Premium Smartphones. Unbeatable Prices.</h2>
+  <p>Choose your model, customize it, and order instantly.</p>
 </section>
 
-<section class="products">
-  <div class="product">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Chow_Chow_-_Yellow.jpg" alt="Classic Coco" />
-    <h3>Classic Coco</h3>
-    <p>Fluffy pastel yellow Chow Chow plushie — 25cm tall.</p>
-    <p><strong>$25</strong></p>
-    <button onclick="addToCart('Classic Coco', 25)">Add to Cart</button>
+<section id="products" class="product-section">
+  <h2 style="text-align:center;color:#1e88e5;">Our Smartphones</h2>
+  <div class="grid" id="productGrid"></div>
+</section>
+
+<section id="about" class="product-section">
+  <h2 style="color:#1e88e5;">About</h2>
+  <p>We are a marketplace dedicated to offering flagship and premium smartphones with customizable options.</p>
+</section>
+
+<section id="contact" class="product-section">
+  <h2 style="color:#1e88e5;">Contact</h2>
+  <p>Email: support@techproseller.com</p>
+  <p>Phone: +1 (555) 123-4567</p>
+</section>
+
+<!-- PRODUCT MODAL -->
+<div id="specModal" class="modal-bg">
+  <div class="modal">
+    <span class="close-btn" onclick="closeSpecs()">X</span>
+    <h2 id="spec-title"></h2>
+    <img id="spec-image" style="width:100%;height:260px;object-fit:contain;margin-top:10px;">
+    <p id="spec-body"></p>
+    <h3>Customize</h3>
+    <div class="option-row">
+      <label>Color</label>
+      <select id="colorSelect" onchange="updateSelectedImage();updatePrice()"></select>
+    </div>
+    <div class="option-row">
+      <label>Storage</label>
+      <select id="storageSelect" onchange="updatePrice()"></select>
+    </div>
+    <h3>Price: <span id="modalPrice" style="color:#2ecc71;font-weight:bold;"></span></h3>
+    <button class="add-cart" onclick="addToCart()">Add to cart</button>
   </div>
+</div>
 
-  <div class="product">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Chow_Chow_puppy.jpg" alt="Pink Dream Coco" />
-    <h3>Pink Dream Coco</h3>
-    <p>Light pink edition with neon glow effect. Limited!</p>
-    <p><strong>$35</strong></p>
-    <button onclick="addToCart('Pink Dream Coco', 35)">Add to Cart</button>
-  </div>
+<!-- CART -->
+<div id="cartPanel" class="cart-panel">
+  <h2>Your Cart</h2>
+  <div id="cartItems"></div>
+  <h3>Total: <span id="cartTotal">$0.00</span></h3>
+  <button class="checkout-btn" onclick="checkout()">Checkout</button>
+</div>
 
-  <div class="product">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/Chow_Chow_dog.jpg" alt="Mini Coco" />
-    <h3>Mini Coco</h3>
-    <p>Miniature pastel Chow Chow figure — 10cm tall.</p>
-    <p><strong>$15</strong></p>
-    <button onclick="addToCart('Mini Coco', 15)">Add to Cart</button>
-  </div>
-</section>
-
-<section id="cart">
-  <h2>🛒 Your Cart</h2>
-  <ul id="cart-items"></ul>
-  <p><strong>Total: $<span id="total">0</span></strong></p>
-</section>
-
-<section id="checkout">
-  <h2>Checkout</h2>
-  <button onclick="checkout()">Proceed to Checkout</button>
-</section>
-
-<footer>
-  <p>© 2025 Coco Chow Chow Virtual Shop | Made with 💖 and neon lights</p>
-</footer>
+<footer>© 2025 TechProSeller</footer>
 
 <script>
-  let cart = [];
-  let total = 0;
+function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:"smooth"});}
 
-  function addToCart(name, price) {
-    cart.push({ name, price });
-    total += price;
-    renderCart();
+/* ------ PRODUCT DATABASE ------ */
+const products = {
+
+  /* ---------- Samsung S25 Ultra ---------- */
+  s25ultra: {
+    name: "Samsung Galaxy S25 Ultra",
+    basePrice: 1299,
+    specs: `• 6.9″ Dynamic AMOLED 2X<br>• Snapdragon 8 Gen 4<br>• 200MP Quad Camera<br>• 12GB RAM<br>• 5000 mAh Battery`,
+    colors: {
+      "Black": "https://s13emagst.akamaized.net/products/84446/84445769/images/res_001e7e69e6d46fc6986fd4ee21fa0b78.jpg?width=720&height=720&hash=6660C1D946D94CBE36805F70804E8C03",
+      "White Silver": "https://s13emagst.akamaized.net/products/84446/84445771/images/res_010a3c7e38f9c9c9cb33871e8d34cd69.jpg?width=720&height=720&hash=1ACE6D6FE697885F52BC387443DAF6BE",
+      "Gray": "https://s13emagst.akamaized.net/products/84446/84445770/images/res_e3ece7d39a8a5aafa0a3d026b45d88fe.jpg?width=720&height=720&hash=973D04CABADCF04AC07E318DD94EA0AB"
+    },
+    storage: [256, 512, 1024]
+  },
+
+  /* ---------- Samsung S25 ---------- */
+  s25: {
+    name: "Samsung Galaxy S25",
+    basePrice: 899,
+    specs: `• 6.7″ AMOLED<br>• Snapdragon 8 Gen 4<br>• 50MP Triple Camera<br>• 10GB RAM<br>• 4500 mAh Battery`,
+    colors: {
+      "Mint": "https://s13emagst.akamaized.net/products/84446/84445745/images/res_b4f3d79522735557b456887b00bf418d.jpg?width=720&height=720&hash=16685D46EFF53175DA678318D451E00F",
+      "Blue": "https://s13emagst.akamaized.net/products/84446/84445742/images/res_3ea91debbe31ed9e8d5a667387425cc2.jpg?width=720&height=720&hash=D4A7ACF1BCAA4F4489B103D5F6BC21F5",
+      "Silver Shadow": "https://s13emagst.akamaized.net/products/84446/84445748/images/res_81ae3d6632d20b3f01ffb8edea7c73f3.jpg?width=720&height=720&hash=FF92E018C4CEDCF12BFEACAD50839533"
+    },
+    storage: [128, 256, 512]
+  },
+
+  /* ---------- Z Fold 7 ---------- */
+  zfold7: {
+    name: "Samsung Galaxy Z Fold 7",
+    basePrice: 1799,
+    specs: `• 8.0″ Foldable Display<br>• Snapdragon 8 Gen Elite<br>• 200MP Camera<br>• 16GB RAM<br>• 4400 mAh Battery`,
+    colors: {
+      "Blue": "https://s13emagst.akamaized.net/products/99055/99054941/images/res_729ea6e7cdb976522ac00d7a3766f37d.jpg?width=720&height=720&hash=1DDCCC9A751B519F3AE04226C7ED24F0",
+      "Black": "https://s13emagst.akamaized.net/products/99055/99054940/images/res_120dfc241ae57a7c03e4b219d65f0921.jpg?width=720&height=720&hash=6104A208EA05F8AD4848CBB5B0D0FD83",
+      "Silver": "https://s13emagst.akamaized.net/products/99055/99054944/images/res_1f1a3b68dcbc83749a523cddea728a13.jpg?width=720&height=720&hash=06FA028FEA454F18C3F7BFDEFF7496F1"
+    },
+    storage: [256, 512, 1024]
+  },
+
+  /* ---------- iPhone 17 Pro Max ---------- */
+  iphone17: {
+    name: "iPhone 17 Pro Max",
+    basePrice: 1199,
+    specs: `• 6.7″ Super Retina XDR<br>• A19 Pro Chip<br>• 48MP Triple Camera<br>• 8GB RAM<br>• 39 Hours Battery`,
+    colors: {
+      "Silver": "https://s13emagst.akamaized.net/products/102972/102971603/images/res_3068a10e181103d3223a4b9b61950c54.jpg?width=720&height=720&hash=4DB633047EFB2CF2F4E7087C39438AD1",
+      "Orange": "https://s13emagst.akamaized.net/products/102972/102971604/images/res_8b9a44b3730436c3966b37351d4ba1d2.jpg?width=720&height=720&hash=F99DA454AA885BB4B06EF1C60D0B6439",
+      "Deep Blue": "https://s13emagst.akamaized.net/products/102972/102971605/images/res_521720717ffbec523996fee25dcd20c1.jpg?width=720&height=720&hash=86A79D0AD127B3F793E4057A5605CD7F"
+    },
+    storage: [256, 512, 1024]
+  },
+
+  /* ---------- Oppo Find X9 Pro ---------- */
+  findx9pro: {
+    name: "Oppo Find X9 Pro",
+    basePrice: 1099,
+    specs: `• 6.78″ LTPO 120Hz<br>• Dimensity 9500<br>• Hasselblad Camera<br>• 12GB RAM<br>• 7500 mAh Battery`,
+    colors: {
+      "White": "https://s13emagst.akamaized.net/products/107388/107387434/images/res_e003e0971cdc09a8b626275d96d129b1.jpg?width=720&height=720&hash=D6E45DB9BD2FC09F89CBE0421769B5C7"
+    },
+    storage: [512, 1024]
+  },
+
+  /* ---------- Google Pixel 10 Pro ---------- */
+  pixel10: {
+    name: "Google Pixel 10 Pro",
+    basePrice: 999,
+    specs: `• 6.5″ OLED<br>• Google Tensor G5<br>• 50MP Camera<br>• 12GB RAM<br>• 5000 mAh Battery`,
+    colors: {
+      "Black": "https://s13emagst.akamaized.net/products/100990/100989853/images/res_657c9bead6426b86d763dba1c5f3f55c.jpg?width=720&height=720&hash=7863DE4974D74E6D131090830172B0D3",
+      "Gray": "https://s13emagst.akamaized.net/products/100990/100989855/images/res_90c89c1445d23f3c81cdb9f53b325d3d.jpg?width=720&height=720&hash=97AFD1C8E98076AABCF1BAACDDEC5A01",
+      "Green": "https://s13emagst.akamaized.net/products/100990/100989856/images/res_5e18587f2d3cf8b5b625cb44838a7a8b.jpg?width=720&height=720&hash=A2DAF2031C2207B43002A5D87DEBC093"
+    },
+    storage: [128, 256, 512]
+  },
+
+  /* ---------- OnePlus 15 ---------- */
+  oneplus15: {
+    name: "OnePlus 15",
+    basePrice: 799,
+    specs: `• 6.7″ Fluid AMOLED<br>• Snapdragon 8 Gen 4<br>• 50MP Camera<br>• 12GB RAM<br>• 5000 mAh Battery`,
+    colors: {
+      "Cream": "https://s13emagst.akamaized.net/products/107392/107391116/images/res_89ce19f27551362b5de72f3de8c537b6.jpg?width=720&height=720&hash=3E390919D8D0BA3D146040D6C4CCC2C4",
+      "Black": "https://s13emagst.akamaized.net/products/107392/107391115/images/res_0824a0da138aeb7017ae1962f3d616a3.jpg?width=720&height=720&hash=5639B91AE66AAE5C79C19DA0D3FE104E"
+    },
+    storage: [256, 512]
   }
 
-  function renderCart() {
-    const cartList = document.getElementById("cart-items");
-    const totalEl = document.getElementById("total");
-    cartList.innerHTML = "";
-    cart.forEach((item, index) => {
-      const li = document.createElement("li");
-      li.textContent = `${item.name} - $${item.price}`;
-      cartList.appendChild(li);
-    });
-    totalEl.textContent = total.toFixed(2);
+};
+
+/* ------- RENDER PRODUCTS ------- */
+function renderProducts(){
+  const grid=document.getElementById("productGrid");
+  for(const id in products){
+    const p=products[id];
+    const firstImg=Object.values(p.colors)[0];
+    const div=document.createElement("div");
+    div.className="product";
+    div.onclick=()=>openSpecs(id);
+    div.innerHTML=`
+      <img src="${firstImg}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x250?text=${p.name}'">
+      <h3>${p.name}</h3>
+      <div class="price">$${p.basePrice}</div>
+    `;
+    grid.appendChild(div);
+  }
+}
+renderProducts();
+
+/* ------- MODAL ------- */
+let activeProduct=null;
+function openSpecs(id){
+  activeProduct=products[id];
+  document.getElementById("spec-title").innerText=activeProduct.name;
+  document.getElementById("spec-body").innerHTML=activeProduct.specs;
+  const colorSel=document.getElementById("colorSelect");
+  const storageSel=document.getElementById("storageSelect");
+  colorSel.innerHTML=""; storageSel.innerHTML="";
+  for(const c in activeProduct.colors){
+    const opt=document.createElement("option");
+    opt.value=c; opt.textContent=c;
+    colorSel.appendChild(opt);
+  }
+  activeProduct.storage.forEach(s=>{
+    const opt=document.createElement("option");
+    opt.value=s; opt.textContent=s+" GB";
+    storageSel.appendChild(opt);
+  });
+  updateSelectedImage(); updatePrice();
+  document.getElementById("specModal").style.display="flex";
+}
+function closeSpecs(){document.getElementById("specModal").style.display="none";}
+
+function updateSelectedImage(){
+  const color=document.getElementById("colorSelect").value;
+  const img=activeProduct.colors[color];
+  const specImg = document.getElementById("spec-image");
+  specImg.src=img;
+  specImg.onerror = () => { specImg.src='https://via.placeholder.com/300x250?text='+activeProduct.name+'+'+color; };
+}
+
+function updatePrice(){
+  const storage=Number(document.getElementById("storageSelect").value);
+  const base=activeProduct.basePrice;
+  let price = base;
+
+  // realistic price adjustments:
+  const minStorage = activeProduct.storage[0];
+  if(storage > minStorage){
+    const steps = (storage - minStorage) / 256;
+    price += steps * 100;
+  } else if(storage < minStorage){
+    price -= 50;
   }
 
-  function checkout() {
-    if (cart.length === 0) {
-      alert("Your cart is empty! 🛒");
-      return;
-    }
-    alert("Thank you for your purchase of " + cart.length + " Coco(s)! 💖");
-    cart = [];
-    total = 0;
-    renderCart();
-  }
+  document.getElementById("modalPrice").innerText="$"+price.toFixed(0);
+}
+
+/* ------- CART ------- */
+const cart=[];
+function addToCart(){
+  const color=document.getElementById("colorSelect").value;
+  const storage=document.getElementById("storageSelect").value;
+  const price=Number(document.getElementById("modalPrice").innerText.replace("$",""));
+  cart.push({name:activeProduct.name,color,storage,price});
+  closeSpecs(); renderCart();
+}
+function renderCart(){
+  const div=document.getElementById("cartItems");
+  div.innerHTML="";
+  let total=0;
+  cart.forEach((item,i)=>{
+    total+=item.price;
+    const d=document.createElement("div");
+    d.className="cart-item";
+    d.innerHTML=`
+      <strong>${item.name}</strong><br>
+      Color: ${item.color}<br>
+      Storage: ${item.storage} GB<br>
+      Price: $${item.price}<br>
+      <button onclick="removeItem(${i})">Remove</button>
+    `;
+    div.appendChild(d);
+  });
+  document.getElementById("cartTotal").innerText="$"+total.toFixed(2);
+  document.getElementById("cart-count").innerText=cart.length;
+}
+function removeItem(i){cart.splice(i,1);renderCart();}
+function toggleCart(){document.getElementById("cartPanel").classList.toggle("open");}
+function checkout(){
+  if(cart.length===0) return alert("Your cart is empty!");
+  let msg="ORDER SUMMARY:\n\n";
+  cart.forEach((p,i)=>{msg+=`${i+1}. ${p.name} — ${p.color} — ${p.storage}GB — $${p.price}\n`;});
+  msg+=`\nTotal: $${cart.reduce((s,p)=>s+p.price,0).toFixed(2)}`;
+  alert(msg+"\n\nThank you for your purchase!");
+  cart.length=0; renderCart(); toggleCart();
+}
 </script>
-
 </body>
 </html>
+
